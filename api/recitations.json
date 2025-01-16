@@ -1,0 +1,362 @@
+{
+  "Menshawi": {
+    "subfolder": "Menshawi_32kbps",
+    "name": "Menshawi",
+    "bitrate": "32kbps",
+    "arabicName": "المنشاوي"
+  },
+  "Minshawy Murattal": {
+    "subfolder": "Minshawy_Murattal_128kbps",
+    "name": "Minshawy Murattal",
+    "bitrate": "128kbps",
+    "arabicName": "المنشاوي",
+    "type": "Murattal",
+    "typeInArabic": "مرتل"
+  },
+  "Minshawy Mujawwad": {
+    "subfolder": "Minshawy_Mujawwad_192kbps",
+    "name": "Minshawy Mujawwad",
+    "bitrate": "192kbps",
+    "arabicName": "المنشاوي",
+    "type": "Mujawwad",
+    "typeInArabic": "مجود"
+  },
+  "Husary": {
+    "subfolder": "Husary_128kbps",
+    "name": "Husary",
+    "bitrate": "128kbps",
+    "arabicName": "الحصري"
+  },
+  "Husary Mujawwad": {
+    "subfolder": "Husary_128kbps_Mujawwad",
+    "name": "Husary Mujawwad",
+    "bitrate": "128kbps",
+    "arabicName": "الحصري",
+    "type": "Mujawwad",
+    "typeInArabic": "مجود"
+  },
+  "Husary (Muallim)": {
+    "subfolder": "Husary_Muallim_128kbps",
+    "name": "Husary (Muallim)",
+    "bitrate": "128kbps",
+    "arabicName": "الحصري",
+    "type": "Muallim",
+    "typeInArabic": "معلم"
+  },
+  "AbdulSamad": {
+    "subfolder": "AbdulSamad_64kbps_QuranExplorer.Com",
+    "name": "Abdulbasit AbdulSamad",
+    "bitrate": "64kbps",
+    "arabicName": "عبدالباسط عبدالصمد"
+  },
+  "Abdul Basit Murattal": {
+    "subfolder": "Abdul_Basit_Murattal_192kbps",
+    "name": "Abdulbasit AbdulSamad",
+    "bitrate": "192kbps",
+    "arabicName": "عبدالباسط عبدالصمد",
+    "type": "Murattal",
+    "typeInArabic": "مرتل"
+  },
+  "Abdul Basit Mujawwad": {
+    "subfolder": "Abdul_Basit_Mujawwad_128kbps",
+    "name": "Abdulbasit AbdulSamad",
+    "bitrate": "128kbps",
+    "arabicName": "عبدالباسط عبدالصمد",
+    "type": "Mujawwad",
+    "typeInArabic": "مجود"
+  },
+  "Yasser_Ad-Dussary": {
+    "subfolder": "Yasser_Ad-Dussary_128kbps",
+    "name": "Yasser_Ad-Dussary",
+    "bitrate": "128kbps",
+    "arabicName": "ياسر الدوسري"
+  },
+  "Alafasy": {
+    "subfolder": "Alafasy_128kbps",
+    "name": "Alafasy",
+    "bitrate": "128kbps",
+    "arabicName": "مشاري العفاسي"
+  },
+  "Abdurrahmaan As-Sudais": {
+    "subfolder": "Abdurrahmaan_As-Sudais_192kbps",
+    "name": "Abdurrahmaan As-Sudais",
+    "bitrate": "192kbps",
+    "arabicName": "عبد الرحمن السديس"
+  },
+  "Maher Al Muaiqly": {
+    "subfolder": "MaherAlMuaiqly128kbps",
+    "name": "Maher Al Muaiqly",
+    "bitrate": "128kbps",
+    "arabicName": "ماهر المعيقلي"
+  },
+  "Ali Jaber": {
+    "subfolder": "Ali_Jaber_64kbps",
+    "name": "Ali Jaber",
+    "bitrate": "64kbps",
+    "arabicName": "علي جابر"
+  },
+  "Fares Abbad": {
+    "subfolder": "Fares_Abbad_64kbps",
+    "name": "Fares Abbad",
+    "bitrate": "64kbps",
+    "arabicName": "فارس عباد"
+  },
+  "Muhammad Ayyoub": {
+    "subfolder": "Muhammad_Ayyoub_128kbps",
+    "name": "Muhammad Ayyoub",
+    "bitrate": "128kbps",
+    "arabicName": "محمد أيوب"
+  },
+  "Abdullah Basfar": {
+    "subfolder": "Abdullah_Basfar_192kbps",
+    "name": "Abdullah Basfar",
+    "bitrate": "192kbps",
+    "arabicName": "عبد الله بصفر"
+  },
+  "Abu Bakr Ash-Shaatree": {
+    "subfolder": "Abu_Bakr_Ash-Shaatree_128kbps",
+    "name": "Abu Bakr Ash-Shaatree",
+    "bitrate": "128kbps",
+    "arabicName": "أبو بكر الشاطري"
+  },
+  "Ghamadi": {
+    "subfolder": "Ghamadi_40kbps",
+    "name": "Ghamadi",
+    "bitrate": "40kbps",
+    "arabicName": "الغامدي"
+  },
+  "Hani Rifai": {
+    "subfolder": "Hani_Rifai_192kbps",
+    "name": "Hani Rifai",
+    "bitrate": "192kbps",
+    "arabicName": "هاني الرفاعي"
+  },
+  "Hudhaify": {
+    "subfolder": "Hudhaify_128kbps",
+    "name": "Hudhaify",
+    "bitrate": "128kbps",
+    "arabicName": "الحذيفي"
+  },
+  "Ibrahim Akhdar": {
+    "subfolder": "Ibrahim_Akhdar_64kbps",
+    "name": "Ibrahim Akhdar",
+    "bitrate": "64kbps",
+    "arabicName": "إبراهيم الأخضر"
+  },
+  "Mohammad al Tablaway": {
+    "subfolder": "Mohammad_al_Tablaway_128kbps",
+    "name": "Mohammad al Tablaway",
+    "bitrate": "128kbps",
+    "arabicName": "محمد الطبلاوي"
+  },
+  "Muhammad Jibreel": {
+    "subfolder": "Muhammad_Jibreel_128kbps",
+    "name": "Muhammad Jibreel",
+    "bitrate": "128kbps",
+    "arabicName": "محمد جبريل"
+  },
+  "Mustafa Ismail": {
+    "subfolder": "Mustafa_Ismail_48kbps",
+    "name": "Mustafa Ismail",
+    "bitrate": "48kbps",
+    "arabicName": "مصطفى إسماعيل"
+  },
+  "Saood bin Ibraaheem Ash-Shuraym": {
+    "subfolder": "Saood_ash-Shuraym_128kbps",
+    "name": "Saood bin Ibraaheem Ash-Shuraym",
+    "bitrate": "128kbps",
+    "arabicName": "سعود بن إبراهيم الشريم"
+  },
+  "Salaah AbdulRahman Bukhatir": {
+    "subfolder": "Salaah_AbdulRahman_Bukhatir_128kbps",
+    "name": "Salaah AbdulRahman Bukhatir",
+    "bitrate": "128kbps",
+    "arabicName": "صلاح عبد الرحمن بوخاطر"
+  },
+  "Muhsin Al Qasim": {
+    "subfolder": "Muhsin_Al_Qasim_192kbps",
+    "name": "Muhsin Al Qasim",
+    "bitrate": "192kbps",
+    "arabicName": "محسن القاسم"
+  },
+  "Abdullaah 3awwaad Al-Juhaynee": {
+    "subfolder": "Abdullaah_3awwaad_Al-Juhaynee_128kbps",
+    "name": "Abdullaah 3awwaad Al-Juhaynee",
+    "bitrate": "128kbps",
+    "arabicName": "عبدالله عواد الجهني"
+  },
+  "Salah Al Budair": {
+    "subfolder": "Salah_Al_Budair_128kbps",
+    "name": "Salah Al Budair",
+    "bitrate": "128kbps",
+    "arabicName": "صلاح البدير"
+  },
+  "Abdullah Matroud": {
+    "subfolder": "Abdullah_Matroud_128kbps",
+    "name": "Abdullah Matroud",
+    "bitrate": "128kbps",
+    "arabicName": "عبدالله مطرود"
+  },
+  "Ahmed Neana": {
+    "subfolder": "Ahmed_Neana_128kbps",
+    "name": "Ahmed Neana",
+    "bitrate": "128kbps",
+    "arabicName": "أحمد نعينع"
+  },
+  "Muhammad AbdulKareem": {
+    "subfolder": "Muhammad_AbdulKareem_128kbps",
+    "name": "Muhammad AbdulKareem",
+    "bitrate": "128kbps",
+    "arabicName": "محمد عبدالكريم"
+  },
+  "Khalefa Al-Tunaiji": {
+    "subfolder": "khalefa_al_tunaiji_64kbps",
+    "name": "Khalefa Al-Tunaiji",
+    "bitrate": "64kbps",
+    "arabicName": "خليفة الطنيجي"
+  },
+  "Mahmoud Ali Al-Banna": {
+    "subfolder": "mahmoud_ali_al_banna_32kbps",
+    "name": "Mahmoud Ali Al-Banna",
+    "bitrate": "32kbps",
+    "arabicName": "محمود علي البنا"
+  },
+  "Karim Mansoori (Iran)": {
+    "subfolder": "Karim_Mansoori_40kbps",
+    "name": "Karim Mansoori (Iran)",
+    "bitrate": "40kbps",
+    "arabicName": "كريم منصوري"
+  },
+  "Khalid Abdullah al-Qahtanee": {
+    "subfolder": "Khaalid_Abdullaah_al-Qahtaanee_192kbps",
+    "name": "Khalid Abdullah al-Qahtanee",
+    "bitrate": "192kbps",
+    "arabicName": "خالد عبدالله القحطاني"
+  },
+  "Nasser_Alqatami": {
+    "subfolder": "Nasser_Alqatami_128kbps",
+    "name": "Nasser_Alqatami",
+    "bitrate": "128kbps",
+    "arabicName": "ناصر القطامي"
+  },
+  "Ali_Hajjaj_AlSuesy": {
+    "subfolder": "Ali_Hajjaj_AlSuesy_128kbps",
+    "name": "Ali_Hajjaj_AlSuesy",
+    "bitrate": "128kbps",
+    "arabicName": "علي حجاج السويسي"
+  },
+  "Sahl_Yassin": {
+    "subfolder": "Sahl_Yassin_128kbps",
+    "name": "Sahl_Yassin",
+    "bitrate": "128kbps",
+    "arabicName": "سهل ياسين"
+  },
+  "Ahmed Ibn Ali Al Ajamy": {
+    "subfolder": "ahmed_ibn_ali_al_ajamy_128kbps",
+    "name": "Ahmed Ibn Ali Al Ajamy",
+    "bitrate": "128kbps",
+    "arabicName": "أحمد بن علي العجمي"
+  },
+  "Aziz Alili": {
+    "subfolder": "aziz_alili_128kbps",
+    "name": "Aziz Alili",
+    "bitrate": "128kbps",
+    "arabicName": "عزيز عليلي"
+  },
+  "Yaser Salamah": {
+    "subfolder": "Yaser_Salamah_128kbps",
+    "name": "Yaser Salamah",
+    "bitrate": "128kbps",
+    "arabicName": "ياسر سلامة"
+  },
+  "Akram Al Alaqimy": {
+    "subfolder": "Akram_AlAlaqimy_128kbps",
+    "name": "Akram Al Alaqimy",
+    "bitrate": "128kbps",
+    "arabicName": "أكرم العلاقمي"
+  },
+  "Ayman Sowaid": {
+    "subfolder": "Ayman_Sowaid_64kbps",
+    "name": "Ayman Sowaid",
+    "bitrate": "64kbps",
+    "arabicName": "أيمن السويد"
+  },
+  "Parhizgar_64Kbps": {
+    "subfolder": "Parhizgar_48kbps",
+    "name": "Shahriar Parhizgar",
+    "bitrate": "64Kbps",
+    "arabicName": "شهریار پرهیزگار"
+  },
+  "(Warsh) Ibrahim Al-Dosary": {
+    "subfolder": "warsh/warsh_ibrahim_aldosary_128kbps",
+    "name": "(Warsh) Ibrahim Al-Dosary",
+    "bitrate": "128kbps",
+    "arabicName": "ابراهيم الدوسري",
+    "type": "Warsh",
+    "typeInArabic": "ورش"
+  },
+  "(Warsh) Yassin Al-Jazaery": {
+    "subfolder": "warsh/warsh_yassin_al_jazaery_64kbps",
+    "name": "(Warsh) Yassin Al-Jazaery",
+    "bitrate": "64kbps",
+    "arabicName": "ياسين الجزائري",
+    "type": "Warsh",
+    "typeInArabic": "ورش"
+  },
+  "(Warsh) Abdul Basit": {
+    "subfolder": "warsh/warsh_Abdul_Basit_128kbps",
+    "name": "(Warsh) Abdul Basit",
+    "bitrate": "128kbps",
+    "arabicName": "عبدالباسط",
+    "type": "Warsh",
+    "typeInArabic": "ورش"
+  }
+  // "MultiLanguage/Basfar Walk": {
+  //   "subfolder": "MultiLanguage/Basfar_Walk_192kbps",
+  //   "name": "MultiLanguage/Basfar Walk",
+  //   "bitrate": "192kbps",
+  //   "arabicName": ""
+  // },
+  // "(English) Translated by Sahih International Recited by Ibrahim Walk": {
+  //   "subfolder": "English/Sahih_Intnl_Ibrahim_Walk_192kbps",
+  //   "name": "(English) Translated by Sahih International Recited by Ibrahim Walk",
+  //   "bitrate": "192kbps",
+  //   "arabicName": ""
+  // },
+  // "(Persian) Translated by Makarem Recited by Kabiri": {
+  //   "subfolder": "translations/Makarem_Kabiri_16Kbps",
+  //   "name": "(Persian) Translated by Makarem Recited by Kabiri",
+  //   "bitrate": "64Kbps",
+  //   "arabicName": ""
+  // },
+  // "(Persian) Translated by Fooladvand Recited by Hedayatfar": {
+  //   "subfolder": "translations/Fooladvand_Hedayatfar_40Kbps",
+  //   "name": "(Persian) Translated by Fooladvand Recited by Hedayatfar",
+  //   "bitrate": "64Kbps",
+  //   "arabicName": ""
+  // },
+  // "Balayev": {
+  //   "subfolder": "translations/azerbaijani/balayev",
+  //   "name": "Balayev",
+  //   "bitrate": "64Kbps",
+  //   "arabicName": ""
+  // },
+  // "Besim Korkut (Bosnian)": {
+  //   "subfolder": "translations/besim_korkut_ajet_po_ajet",
+  //   "name": "Besim Korkut (Bosnian)",
+  //   "bitrate": "128kbps",
+  //   "arabicName": ""
+  // },
+  // "(Urdu) Shamshad Ali Khan": {
+  //   "subfolder": "translations/urdu_shamshad_ali_khan_46kbps",
+  //   "name": "(Urdu) Shamshad Ali Khan",
+  //   "bitrate": "46kbps",
+  //   "arabicName": ""
+  // },
+  // "Farhat Hashmi (Urdu word for word translation)": {
+  //   "subfolder": "translations/urdu_farhat_hashmi",
+  //   "name": "Farhat Hashmi (Urdu word for word translation)",
+  //   "bitrate": "32kbps",
+  //   "arabicName": ""
+  // }
+}
