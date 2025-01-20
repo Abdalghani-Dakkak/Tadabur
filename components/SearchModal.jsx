@@ -8,8 +8,10 @@ import {
   View,
   TextInput,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import { themes } from "@/Helper/Colors";
+
+import { handleGoToPage } from "@/Lib/handleGoToPage";
 
 export default function SearchModal({
   data,
@@ -28,45 +30,20 @@ export default function SearchModal({
     for (let i = 0; i < data[page].length; i++) ayatPages.push(page);
   }
 
-  const handleGoToPage = async (page) => {
-    const jsonValue = JSON.stringify(page);
-    try {
-      await AsyncStorage.setItem("@page", jsonValue);
-
-      // Scroll to the selected index
-      flatlistRef.current.scrollToIndex({
-        index: JSON.parse(jsonValue) - 1,
-        animated: true,
-      });
-
-      setModalVisible(false);
-    } catch (e) {
-      console.log("Error scrolling to index:", e);
-    }
-  };
-
-  // Function to extract Arabic text from a string
-  // const getArabicText = (text) =>
-  //   text.match(/[\u0600-\u06FF\s]+/g)?.join("") || "";
-
-  function isAcceptedCharacter(char) {
-    const regex = /^[\u0621-\u064A\u06BE\u06C1\s]$/;
-    return regex.test(char);
-  }
+  // for searching
   const getArabicText = (text) => {
-    let newText = "";
-    for (let i = 0; i < text.length; i++)
-      if (isAcceptedCharacter(text[i])) newText += text[i];
-    return newText;
+    const regex = /[\u0610-\u061A\u064B-\u065F\u06D6-\u06ED]/g;
+    return text
+      .replace(/ٱلرَّحْمَٰنِ/g, "الرحمن") // Replace specific word "ٱلرَّحْمَٰنِ" with "الرحمن"
+      .replace(regex, "") // Remove diacritics
+      .replace(/ٱ/g, "ا") // Replace ٱ with ا
+      .replace(/ٰ/g, "ا"); // Replace ٰ with ا
   };
-
   useEffect(() => {
     if (search.trim().length) {
       setFilteredAyat(() =>
-        ayat.filter(
-          (ayah) => getArabicText(ayah.text).includes(getArabicText(search))
-          // getArabicText(ayah.text).split(" ").includes(getArabicText(search))
-          // console.log(getArabicText(ayah.text))
+        ayat.filter((ayah) =>
+          getArabicText(ayah.text).includes(getArabicText(search))
         )
       );
     } else setFilteredAyat([...ayat]);
@@ -76,7 +53,7 @@ export default function SearchModal({
     <TouchableOpacity
       key={`ayah_${index}`}
       activeOpacity={0.7}
-      onPress={() => handleGoToPage(item.page)}
+      onPress={() => handleGoToPage(item.page, flatlistRef, setModalVisible)}
     >
       <View style={styles.ayahContainer}>
         <Text style={styles.surahName}>{item.surahName}</Text>

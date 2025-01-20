@@ -1,11 +1,10 @@
 {
   "expo": {
-    "name": "tadabur",
+    "name": "تدبر",
     "slug": "tadabur",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "icon": "./assets/images/app-logo.jpeg",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -13,9 +12,10 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/app-logo.jpeg",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.abdalghanidakkak.tadabur"
     },
     "web": {
       "bundler": "metro",
@@ -27,7 +27,7 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/images/app-logo.jpeg",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
@@ -37,6 +37,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "932565a2-7159-4f18-867e-d281fbf85483"
+      }
     }
   }
 }

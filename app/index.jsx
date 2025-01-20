@@ -9,6 +9,9 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
   ScrollView,
+  Animated,
+  Easing,
+  Image,
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
@@ -16,21 +19,24 @@ import { Audio } from "expo-av";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import RecitationsModal from "../components/RecitationsModal";
-import TafaserModal from "../components/TafaserModal";
-import BookmarkModal from "../components/BookmarkModal";
-import CustomModal from "../components/CustomModal";
-import SearchModal from "../components/SearchModal";
+import SurahNameAndBasmalah from "@/components/SurahNameAndBasmalah";
+import RecitationsModal from "@/components/RecitationsModal";
+import BookmarkModal from "@/components/BookmarkModal";
+import NavigationModal from "@/components/NavigationModal";
+import SearchModal from "@/components/SearchModal";
 
-import { pages } from "../quran/pages";
-import { themes } from "../Helper/Colors";
+import { pages } from "@/quran/pages";
+import { juz } from "@/quran/juz";
 
-import QuranUthmani from "../api/quran-uthmani.json";
-import Recitations from "../api/recitations.json";
+import { themes } from "@/Helper/Colors";
+import { juzName } from "@/Lib/juzName";
 
-import frame from "../assets/images/islamic-frame.png";
-import ayahsSeparator from "../assets/images/ayahs-separetor.png";
-import suraFrame from "../assets/images/surah-frame.png";
+import QuranUthmani from "@/api/quran-uthmani.json";
+import Recitations from "@/api/recitations.json";
+
+import frame from "@/assets/images/islamic-frame.png";
+import ayahsSeparator from "@/assets/images/ayahs-separetor.png";
+import bookmarkImage from "@/assets/images/bookmark.png";
 
 const { width, height } = Dimensions.get("window");
 
@@ -47,7 +53,7 @@ export default function Index() {
   const [recitations, setRecitations] = useState(null);
   const [selectedRecitation, setSelectedRecitation] = useState(null);
 
-  const [bookmark, setBookmark] = useState(null);
+  const [bookmark, setBookmark] = useState(1);
 
   const [currentSound, setCurrentSound] = useState(null);
   const [soundCreated, setSoundCreated] = useState(false);
@@ -56,26 +62,33 @@ export default function Index() {
   const [playNext, setPlayNext] = useState(0);
 
   const flatlistRef = useRef();
+  const pageNumbers = Object.keys(pages);
 
   const getItemFromStorage = async (key) => {
     try {
       const jsonValue = await AsyncStorage.getItem(key);
       const value = JSON.parse(jsonValue);
       switch (key) {
-        case "@page":
-          flatlistRef.current.scrollToIndex({
-            index: value - 1,
-          });
-        case "@recitation":
-          setSelectedRecitation(value);
-        case "@bookmark":
-          setBookmark(value);
+        case "@page": {
+          if (value)
+            flatlistRef.current.scrollToIndex({
+              index: value - 1,
+            });
+          break;
+        }
+        case "@recitation": {
+          if (value) setSelectedRecitation(value);
+          break;
+        }
+        case "@bookmark": {
+          if (value) setBookmark(value);
+          break;
+        }
       }
     } catch (e) {
       console.log(e);
     }
   };
-
   const setItemInStorage = async (key, value) => {
     const jsonValue = JSON.stringify(value);
     try {
@@ -87,7 +100,7 @@ export default function Index() {
 
   useEffect(() => {
     getItemFromStorage("@page");
-    // getItemFromStorage("@recitation");
+    getItemFromStorage("@recitation");
     getItemFromStorage("@bookmark");
 
     const recitationArr = [];
@@ -104,22 +117,18 @@ export default function Index() {
       setCurrentPage(parseInt(viewableItems[0].item, 10)); // Set the index of the first visible item
   });
 
-  const pageNumbers = Object.keys(pages);
-
   useEffect(() => {
     if (pages[currentPage]) setSelectedAyah(pages[currentPage][0]);
     setItemInStorage("@page", currentPage);
   }, [currentPage]);
-
   useEffect(() => {
     setItemInStorage("@recitation", selectedRecitation);
   }, [selectedRecitation]);
 
   const playAudio = async () => {
+    setSoundLoader(true);
     _onPlaybackStatusUpdate = (playbackStatus) => {
-      if (!playbackStatus.isLoaded) {
-        setSoundLoader(true);
-      } else {
+      if (playbackStatus.isLoaded) {
         setSoundLoader(false);
 
         if (playbackStatus.isPlaying) setSoundPlay(true);
@@ -191,86 +200,50 @@ export default function Index() {
       stopAudio();
     }
   }, [selectedAyah, selectedRecitation]);
-
   useEffect(() => {
     if (playNext) playAudio();
   }, [playNext]);
 
-  function juzName(number) {
-    const arabicNumbers = [
-      "الأَوَّلُ",
-      "الثَّانِي",
-      "الثَّالِثُ",
-      "الرَّابِعُ",
-      "الخَامِسُ",
-      "السَّادِسُ",
-      "السَّابِعُ",
-      "الثَّامِنُ",
-      "التَّاسِعُ",
-      "العَاشِرُ",
-      "الحَادِيَ عَشَرَ",
-      "الثَّانِيَ عَشَرَ",
-      "الثَّالِثَ عَشَرَ",
-      "الرَّابِعَ عَشَرَ",
-      "الخَامِسَ عَشَرَ",
-      "السَّادِسَ عَشَرَ",
-      "السَّابِعَ عَشَرَ",
-      "الثَّامِنَ عَشَرَ",
-      "التَّاسِعَ عَشَرَ",
-      "العِشْرُونَ",
-      "الحَادِيَ وَالعِشْرُونَ",
-      "الثَّانِيَ وَالعِشْرُونَ",
-      "الثَّالِثَ وَالعِشْرُونَ",
-      "الرَّابِعَ وَالعِشْرُونَ",
-      "الخَامِسَ وَالعِشْرُونَ",
-      "السَّادِسَ وَالعِشْرُونَ",
-      "السَّابِعَ وَالعِشْرُونَ",
-      "الثَّامِنَ وَالعِشْرُونَ",
-      "التَّاسِعَ وَالعِشْرُونَ",
-      "الثَّلاَثُونَ",
-    ];
+  // for animation
+  // ###################################################################################################################
+  const rotation = useRef(new Animated.Value(0)).current;
 
-    if (number < 1 || number > 30) {
-      throw new Error("رقم غير صالح. يُرجى إدخال رقم بين 1 و 30.");
-    }
-
-    return `الجُزْءُ ${arabicNumbers[number - 1]}`;
-  }
-
-  const renderSurahNameAndBasmalah = (ayah) => {
-    if (ayah.numberInSurah === 1)
-      return (
-        <>
-          {/* Surah Name */}
-          <View style={styles.surahNameContainer}>
-            <ImageBackground
-              source={suraFrame}
-              resizeMode="stretch"
-              style={styles.surahNameBackground}
-            >
-              <Text style={styles.surahName}>
-                {ayah.surahName.slice(7).trim()}
-              </Text>
-            </ImageBackground>
-          </View>
-
-          {/* Basmalah */}
-          <View style={styles.basmalahContainer}>
-            <Text style={styles.basmalah}>{ayah.text.slice(0, 38).trim()}</Text>
-          </View>
-        </>
-      );
+  // Start rotation animation
+  const startRotation = () => {
+    Animated.loop(
+      Animated.timing(rotation, {
+        toValue: 1,
+        duration: 1000, // Duration of one full rotation
+        easing: Easing.linear, // Smooth linear rotation
+        useNativeDriver: true, // Use native driver for better performance
+      })
+    ).start();
   };
 
-  const renderPage = ({ item: pageNumber }) => {
-    if (!pages[pageNumber]) {
-      return (
-        <View>
-          <Text>Page not available</Text>
-        </View>
-      );
-    }
+  // Stop rotation animation
+  const stopRotation = () => {
+    rotation.stopAnimation();
+    rotation.setValue(0); // Reset rotation value
+  };
 
+  // Trigger animation when soundLoader changes
+  useEffect(() => {
+    if (soundLoader) startRotation();
+    else stopRotation();
+  }, [soundLoader]);
+
+  // Interpolate rotation value to degrees
+  const rotateInterpolate = rotation.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["0deg", "360deg"],
+  });
+
+  const loaderStyle = {
+    transform: [{ rotate: rotateInterpolate }],
+  };
+  // ###################################################################################################################
+
+  const renderPage = ({ item: pageNumber }) => {
     return (
       <ImageBackground source={frame} resizeMode="stretch">
         <TouchableWithoutFeedback
@@ -285,13 +258,16 @@ export default function Index() {
               },
             ]}
           >
+            {+pageNumber === bookmark && (
+              <Image source={bookmarkImage} style={styles.bookmark} />
+            )}
             <Text>
               {pages[pageNumber].map((ayah, index) => (
                 <Text
                   key={`ayah_${ayah.number}`}
                   style={{ textAlign: "right" }}
                 >
-                  {renderSurahNameAndBasmalah(ayah)}
+                  <SurahNameAndBasmalah ayah={ayah} />
                   <Text
                     style={[
                       styles.ayahText,
@@ -302,6 +278,7 @@ export default function Index() {
                     ]}
                     onPress={() => setOptions((prev) => !prev)}
                     onLongPress={() => setSelectedAyah(ayah)}
+                    // allowFontScaling={true}
                   >
                     {` ${
                       ayah.numberInSurah === 1
@@ -328,6 +305,8 @@ export default function Index() {
                         ]}
                       >{`${ayah.numberInSurah}`}</Text>
                     </ImageBackground>
+                    {pages[pageNumber][index + 1]?.numberInSurah === 1 &&
+                      "\n\n"}
                   </Text>
                 </Text>
               ))}
@@ -386,12 +365,16 @@ export default function Index() {
                 }}
               >
                 {soundLoader ? (
-                  <Feather
-                    name="loader"
-                    size={25}
-                    color="white"
-                    style={[styles.optionIcon, styles.borderEnd]}
-                  />
+                  <View style={styles.borderEnd}>
+                    <Animated.View style={loaderStyle}>
+                      <Feather
+                        name="loader"
+                        size={25}
+                        color="white"
+                        style={[styles.optionIcon]}
+                      />
+                    </Animated.View>
+                  </View>
                 ) : (
                   <Ionicons
                     name={!soundPlay ? "play" : "pause"}
@@ -409,25 +392,16 @@ export default function Index() {
                   style={[styles.optionIcon, styles.borderEnd]}
                 />
                 {recitations && (
-                  <>
-                    <RecitationsModal
-                      data={recitations}
-                      selectedValue={selectedRecitation}
-                      setSelectedValue={setSelectedRecitation}
-                      defaultValue="القارئ"
-                    />
-
-                    {/* <TafaserModal
-                      data={recitations}
-                      selectedValue={selectedRecitation}
-                      setSelectedValue={setSelectedRecitation}
-                      defaultValue="القارئ"
-                    /> */}
-                  </>
+                  <RecitationsModal
+                    data={recitations}
+                    selectedValue={selectedRecitation}
+                    setSelectedValue={setSelectedRecitation}
+                    defaultValue="القارئ"
+                  />
                 )}
                 <BookmarkModal
-                  selectedValue={bookmark}
-                  setSelectedValue={setBookmark}
+                  bookmark={bookmark}
+                  setBookmark={setBookmark}
                   page={currentPage}
                   flatlistRef={flatlistRef}
                 />
@@ -435,7 +409,10 @@ export default function Index() {
                   name="search"
                   size={25}
                   color="white"
-                  onPress={() => setIsSearchModalIsOpen(true)}
+                  onPress={() => {
+                    stopAudio();
+                    setIsSearchModalIsOpen(true);
+                  }}
                   style={styles.optionIcon}
                 />
                 <SearchModal
@@ -448,11 +425,14 @@ export default function Index() {
               <View style={{ flexDirection: "row" }}>
                 <TouchableOpacity
                   style={[styles.optionTextContainer, styles.borderEnd]}
-                  onPress={() => setIsPagesModalOpen(true)}
+                  onPress={() => {
+                    stopAudio();
+                    setIsPagesModalOpen(true);
+                  }}
                 >
                   <Text style={styles.optionText}>الصفحات</Text>
                 </TouchableOpacity>
-                <CustomModal
+                <NavigationModal
                   data={{
                     data: pageNumbers,
                     pages: pages,
@@ -460,30 +440,39 @@ export default function Index() {
                   isModalVisible={isPagesModalOpen}
                   setModalVisible={setIsPagesModalOpen}
                   flatlistRef={flatlistRef}
+                  type="page"
                 />
                 <TouchableOpacity
                   style={[styles.optionTextContainer, styles.borderEnd]}
-                  onPress={() => setIsChaptersModalOpen(true)}
+                  onPress={() => {
+                    stopAudio();
+                    setIsChaptersModalOpen(true);
+                  }}
                 >
                   <Text style={styles.optionText}>الأجزاء</Text>
                 </TouchableOpacity>
-                <CustomModal
-                  data={{ data: QuranUthmani.data.surahs }}
+                <NavigationModal
+                  data={{ data: juz }}
                   isModalVisible={isChaptersModalOpen}
                   setModalVisible={setIsChaptersModalOpen}
                   flatlistRef={flatlistRef}
+                  type="juz"
                 />
                 <TouchableOpacity
                   style={styles.optionTextContainer}
-                  onPress={() => setIsSurahModalOpen(true)}
+                  onPress={() => {
+                    stopAudio();
+                    setIsSurahModalOpen(true);
+                  }}
                 >
                   <Text style={styles.optionText}>الفهرس</Text>
                 </TouchableOpacity>
-                <CustomModal
+                <NavigationModal
                   data={{ data: QuranUthmani.data.surahs }}
                   isModalVisible={isSurahModalOpen}
                   setModalVisible={setIsSurahModalOpen}
                   flatlistRef={flatlistRef}
+                  type="surah"
                 />
               </View>
             </SafeAreaView>
@@ -504,33 +493,12 @@ const styles = StyleSheet.create({
     paddingVertical: 40,
     paddingHorizontal: 35,
   },
-  surahNameContainer: {
-    width: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 10,
-  },
-  surahNameBackground: {
-    width: "100%",
-    paddingVertical: 10,
-  },
-  surahName: {
-    fontSize: 20,
-    fontWeight: "bold",
-    textAlign: "center",
-    color: themes.light.secondary,
-  },
-  basmalahContainer: {
-    width: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-    marginVertical: 15,
-  },
-  basmalah: {
-    fontSize: 18,
-    fontWeight: "bold",
-    textAlign: "center",
-    color: themes.light.text,
+  bookmark: {
+    width: 25,
+    height: 100,
+    position: "absolute",
+    top: 0,
+    right: 50,
   },
   ayahText: {
     fontFamily: "HafsUthmanic",
@@ -539,6 +507,7 @@ const styles = StyleSheet.create({
     lineHeight: 27,
     textAlign: "right",
     writingDirection: "rtl", // Ensures proper alignment for Arabic text
+    // transform: [{ scale: 2 }],
   },
   ayahNumber: {
     fontSize: 9,
@@ -579,10 +548,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     backgroundColor: "rgba(0, 0, 0, 0.9)",
-    padding: 10,
+    paddingVertical: 15,
   },
   textDetails: {
+    flex: 1,
+    textAlign: "center",
     color: "#fff",
-    fontSize: 20,
+    fontSize: 18,
   },
 });

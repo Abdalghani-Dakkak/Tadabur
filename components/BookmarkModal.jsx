@@ -1,12 +1,19 @@
 import { useState } from "react";
-import { View, Text, TouchableOpacity, Modal, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Modal,
+  StyleSheet,
+  TouchableWithoutFeedback,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { themes } from "@/Helper/Colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function BookmarkModal({
-  selectedValue,
-  setSelectedValue,
+  bookmark,
+  setBookmark,
   page,
   flatlistRef,
 }) {
@@ -16,10 +23,10 @@ export default function BookmarkModal({
     { value: "انتقال الى علامة حفظ", numAction: 2 },
   ];
 
-  const handleAddBookmark = async (bookmark) => {
-    setSelectedValue(bookmark);
+  const handleAddBookmark = async (page) => {
+    setBookmark(page);
 
-    const jsonValue = JSON.stringify(bookmark);
+    const jsonValue = JSON.stringify(page);
     try {
       await AsyncStorage.setItem("@bookmark", jsonValue);
 
@@ -30,27 +37,17 @@ export default function BookmarkModal({
   };
 
   const handleGoToPage = async () => {
-    try {
-      const jsonValue = await AsyncStorage.getItem("@bookmark");
-      const value = JSON.parse(jsonValue);
-
-      // Scroll to the selected index
-      flatlistRef.current.scrollToIndex({
-        index: value - 1,
-        animated: true,
-      });
-
-      setModalVisible(false);
-    } catch (e) {
-      console.log("Error scrolling to index:", e);
-    }
+    flatlistRef.current.scrollToIndex({
+      index: bookmark - 1,
+      // animated: true,
+    });
   };
 
   return (
     <>
       <TouchableOpacity onPress={() => setModalVisible(true)}>
         <Ionicons
-          name={selectedValue === page ? "bookmark" : "bookmark-outline"}
+          name={bookmark === page ? "bookmark" : "bookmark-outline"}
           size={25}
           color="white"
           style={styles.selectBox}
@@ -63,29 +60,34 @@ export default function BookmarkModal({
         animationType="slide"
         onRequestClose={() => setModalVisible(false)}
       >
-        <View
-          style={styles.modalOverlay}
+        <TouchableWithoutFeedback
           onPress={() => setModalVisible(false)}
+          accessible={false}
         >
-          <View style={styles.pickerContainer}>
-            {bookmarkActions.map((bookmark, index) => (
-              <Text
-                key={`bookmarkAction_${index}`}
-                style={[
-                  styles.pickerItem,
-                  index !== bookmarkActions.length - 1 && styles.borderBottom,
-                ]}
-                onPress={() => {
-                  if (bookmark.numAction === 1) handleAddBookmark(page);
-                  else handleGoToPage();
-                  setModalVisible(false);
-                }}
-              >
-                {bookmark.value}
-              </Text>
-            ))}
+          <View
+            style={styles.modalOverlay}
+            onPress={() => setModalVisible(false)}
+          >
+            <View style={styles.pickerContainer}>
+              {bookmarkActions.map((bookmark, index) => (
+                <Text
+                  key={`bookmarkAction_${index}`}
+                  style={[
+                    styles.pickerItem,
+                    index !== bookmarkActions.length - 1 && styles.borderBottom,
+                  ]}
+                  onPress={() => {
+                    if (bookmark.numAction === 1) handleAddBookmark(page);
+                    else handleGoToPage();
+                    setModalVisible(false);
+                  }}
+                >
+                  {bookmark.value}
+                </Text>
+              ))}
+            </View>
           </View>
-        </View>
+        </TouchableWithoutFeedback>
       </Modal>
     </>
   );

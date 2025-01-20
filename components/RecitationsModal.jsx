@@ -6,6 +6,7 @@ import {
   Modal,
   StyleSheet,
   ScrollView,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { themes } from "@/Helper/Colors";
 
@@ -49,39 +50,41 @@ export default function RecitationsModal({
         animationType="slide"
         onRequestClose={() => setModalVisible(false)}
       >
-        <View
-          style={styles.modalOverlay}
-          // onPress={() => setModalVisible(false)}
+        <TouchableWithoutFeedback
+          onPress={() => setModalVisible(false)}
+          accessible={false}
         >
-          <ScrollView style={styles.pickerContainer}>
-            {data &&
-              data.map((recitation, index) => (
-                <Text
-                  key={`recitation_${index}`}
-                  style={[
-                    styles.pickerItem,
-                    index !== data.length - 1 && styles.borderBottom,
-                  ]}
-                  onPress={() => {
-                    setSelectedValue(recitation.subfolder);
-                    setModalVisible(false);
-                  }}
-                >
-                  {`${
-                    recitation.arabicName
-                      ? recitation.arabicName
-                      : recitation.name
-                  } ${
-                    recitation.type
-                      ? recitation.arabicName
-                        ? `(${recitation.typeInArabic})`
-                        : `(${recitation.type})`
-                      : ""
-                  }`}
-                </Text>
-              ))}
-          </ScrollView>
-        </View>
+          <View style={styles.modalOverlay}>
+            <ScrollView style={styles.pickerContainer}>
+              {data &&
+                data.map((recitation, index) => (
+                  <Text
+                    key={`recitation_${index}`}
+                    style={[
+                      styles.pickerItem,
+                      index !== data.length - 1 && styles.borderBottom,
+                    ]}
+                    onPress={() => {
+                      setSelectedValue(recitation.subfolder);
+                      setModalVisible(false);
+                    }}
+                  >
+                    {`${
+                      recitation.arabicName
+                        ? recitation.arabicName
+                        : recitation.name
+                    } ${
+                      recitation.type
+                        ? recitation.arabicName
+                          ? `(${recitation.typeInArabic})`
+                          : `(${recitation.type})`
+                        : ""
+                    }`}
+                  </Text>
+                ))}
+            </ScrollView>
+          </View>
+        </TouchableWithoutFeedback>
       </Modal>
     </>
   );
