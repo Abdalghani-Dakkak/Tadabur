@@ -5,16 +5,16 @@ import {
   TouchableOpacity,
   Modal,
   StyleSheet,
-  ScrollView,
   TouchableWithoutFeedback,
 } from "react-native";
-import { themes } from "@/Helper/Colors";
+import styled from "styled-components/native";
 
 export default function RecitationsModal({
   data,
   selectedValue,
   setSelectedValue,
   defaultValue,
+  deviceLanguage,
 }) {
   const [isModalVisible, setModalVisible] = useState(false);
 
@@ -24,7 +24,10 @@ export default function RecitationsModal({
   return (
     <>
       <TouchableOpacity
-        style={styles.selectBox}
+        style={[
+          styles.selectBox,
+          deviceLanguage.includes("ar") ? styles.borderStart : styles.borderEnd,
+        ]}
         onPress={() => setModalVisible(true)}
       >
         <Text style={styles.selectedText}>
@@ -55,7 +58,7 @@ export default function RecitationsModal({
           accessible={false}
         >
           <View style={styles.modalOverlay}>
-            <ScrollView style={styles.pickerContainer}>
+            <PickerContainer style={styles.pickerContainer}>
               {data &&
                 data.map((recitation, index) => (
                   <Text
@@ -82,7 +85,7 @@ export default function RecitationsModal({
                     }`}
                   </Text>
                 ))}
-            </ScrollView>
+            </PickerContainer>
           </View>
         </TouchableWithoutFeedback>
       </Modal>
@@ -90,13 +93,15 @@ export default function RecitationsModal({
   );
 }
 
+const PickerContainer = styled.ScrollView`
+  background-color: ${(props) => props.theme.pickerColor};
+`;
+
 const styles = StyleSheet.create({
   selectBox: {
     flex: 1,
     justifyContent: "center",
     padding: 12,
-    borderRightWidth: 1,
-    borderRightColor: "#aaa",
   },
   selectedText: {
     fontSize: 12,
@@ -111,7 +116,6 @@ const styles = StyleSheet.create({
   },
   pickerContainer: {
     width: "80%",
-    backgroundColor: themes.light.main,
     borderRadius: 10,
   },
   pickerItem: {
@@ -122,5 +126,13 @@ const styles = StyleSheet.create({
   borderBottom: {
     borderBottomWidth: 0.5,
     borderBottomColor: "#fff",
+  },
+  borderEnd: {
+    borderRightWidth: 1,
+    borderRightColor: "#aaa",
+  },
+  borderStart: {
+    borderLeftWidth: 1,
+    borderLeftColor: "#aaa",
   },
 });

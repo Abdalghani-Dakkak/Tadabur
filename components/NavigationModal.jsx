@@ -8,9 +8,9 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
+  Platform,
 } from "react-native";
-
-import { themes } from "@/Helper/Colors";
+import styled from "styled-components/native";
 
 import { handleGoToPage } from "@/Lib/handleGoToPage";
 import { juzName } from "@/Lib/juzName";
@@ -72,7 +72,7 @@ export default function NavigationModal({
           </Text>
         </View>
 
-        <View style={styles.surahOrJuzNameContainer}>
+        <SurahOrJuzNameContainer style={styles.surahOrJuzNameContainer}>
           {type !== "juz" && (
             <Image
               style={styles.tinyLogo}
@@ -88,14 +88,14 @@ export default function NavigationModal({
               }
             />
           )}
-          <Text style={styles.surahOrJuzName}>
+          <SurahOrJuzName style={styles.surahOrJuzName}>
             {type === "page"
               ? data.pages[item][data.pages[item].length - 1].surahName
               : type === "juz"
               ? juzName(index + 1)
               : item.name}
-          </Text>
-        </View>
+          </SurahOrJuzName>
+        </SurahOrJuzNameContainer>
 
         <View style={[styles.textContainer, { flex: 1 }]}>
           <Text style={styles.text}>
@@ -117,7 +117,10 @@ export default function NavigationModal({
       animationType="slide"
       onRequestClose={() => setModalVisible(false)}
     >
-      <View style={styles.modalContainer}>
+      <ModalContainer
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.modalContainer}
+      >
         {type === "page" && (
           <View style={styles.searchContainer}>
             <TextInput
@@ -142,15 +145,26 @@ export default function NavigationModal({
           }
           renderItem={renderItem}
         />
-      </View>
+      </ModalContainer>
     </Modal>
   );
 }
 
+const ModalContainer = styled.KeyboardAvoidingView`
+  background-color: ${(props) => props.theme.third};
+`;
+
+const SurahOrJuzNameContainer = styled.View`
+  background-color: ${(props) => props.theme.third};
+`;
+
+const SurahOrJuzName = styled.Text`
+  color: ${(props) => props.theme.secondary};
+`;
+
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
-    backgroundColor: "#fff",
   },
   pageContainer: {
     flexDirection: "row",
@@ -170,14 +184,12 @@ const styles = StyleSheet.create({
     flex: 5,
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: themes.light.third,
     padding: 5,
   },
   surahOrJuzName: {
     flex: 1,
     fontSize: 20,
     textAlign: "right",
-    color: themes.light.secondary,
   },
   tinyLogo: {
     width: 45,
@@ -186,7 +198,7 @@ const styles = StyleSheet.create({
   searchContainer: {
     padding: 15,
     paddingHorizontal: 20,
-    backgroundColor: themes.light.text,
+    backgroundColor: "#000",
   },
   search: {
     height: 40,

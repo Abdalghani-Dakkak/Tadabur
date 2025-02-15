@@ -11,7 +11,7 @@ const handleGoToPage = async (page, flatlistRef, setModalVisible) => {
 
     setModalVisible(false);
   } catch (e) {
-    console.log("Error scrolling to index:", e);
+    console.error("Error scrolling to index:", e);
   }
 };
 

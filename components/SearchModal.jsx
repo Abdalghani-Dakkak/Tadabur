@@ -1,66 +1,87 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Modal,
   FlatList,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
   TextInput,
+  Keyboard,
+  TouchableWithoutFeedback,
+  Platform,
+  View,
 } from "react-native";
+import styled from "styled-components/native";
 
-import { themes } from "@/Helper/Colors";
+import { simpleText } from "@/Lib/getArabicText";
+import { ayahs } from "@/quran/ayahs";
 
-import { handleGoToPage } from "@/Lib/handleGoToPage";
+import quranSimple from "@/api/quranSimple.json";
 
 export default function SearchModal({
-  data,
   isModalVisible,
   setModalVisible,
   flatlistRef,
 }) {
+  const ayahsSimple = quranSimple.quran;
   const [search, setSearch] = useState("");
   const [filteredAyat, setFilteredAyat] = useState([]);
+  const searchInputRef = useRef(null);
 
-  let ayat = [],
-    ayatPages = [];
+  useEffect(() => {
+    if (isModalVisible && searchInputRef.current) {
+      setTimeout(() => {
+        searchInputRef.current.focus();
+      }, 100);
+    }
+  }, [isModalVisible]);
 
-  for (const page in data) {
-    ayat = [...ayat, ...data[page]];
-    for (let i = 0; i < data[page].length; i++) ayatPages.push(page);
-  }
-
-  // for searching
-  const getArabicText = (text) => {
-    const regex = /[\u0610-\u061A\u064B-\u065F\u06D6-\u06ED]/g;
-    return text
-      .replace(/ٱلرَّحْمَٰنِ/g, "الرحمن") // Replace specific word "ٱلرَّحْمَٰنِ" with "الرحمن"
-      .replace(regex, "") // Remove diacritics
-      .replace(/ٱ/g, "ا") // Replace ٱ with ا
-      .replace(/ٰ/g, "ا"); // Replace ٰ with ا
-  };
   useEffect(() => {
     if (search.trim().length) {
       setFilteredAyat(() =>
-        ayat.filter((ayah) =>
-          getArabicText(ayah.text).includes(getArabicText(search))
-        )
+        ayahs.filter((ayah, index) => {
+          const ayahText =
+            ayahsSimple[index].verse === 1 &&
+            ayahsSimple[index].chapter !== 1 &&
+            ayahsSimple[index].chapter !== 9
+              ? ayahsSimple[index].text.slice(39).trim()
+              : ayahsSimple[index].text;
+          return simpleText(ayahText).includes(simpleText(search));
+        })
       );
-    } else setFilteredAyat([...ayat]);
+    } else {
+      setFilteredAyat([]);
+    }
   }, [search]);
+
+  const handleAyahPress = (ayah) => {
+    Keyboard.dismiss(); // Close the keyboard immediately
+    setTimeout(() => {
+      flatlistRef.current.scrollToIndex({
+        animated: true,
+        index: ayah.page - 1, // Scroll to selected ayah
+      });
+      setModalVisible(false); // Close modal after navigating
+    }, 100);
+  };
 
   const renderItem = ({ item, index }) => (
     <TouchableOpacity
       key={`ayah_${index}`}
       activeOpacity={0.7}
-      onPress={() => handleGoToPage(item.page, flatlistRef, setModalVisible)}
+      onPress={() => handleAyahPress(item)}
     >
-      <View style={styles.ayahContainer}>
-        <Text style={styles.surahName}>{item.surahName}</Text>
-        <Text
-          style={styles.ayahText}
-        >{`${item.text} (${item.numberInSurah})`}</Text>
-      </View>
+      <AyahContainer style={styles.ayahContainer}>
+        <SurahName style={styles.surahName}>{item.surahName}</SurahName>
+        <AyahText style={styles.ayahText}>
+          {item.numberInSurah === 1 &&
+          item.surahNumber !== 1 &&
+          item.surahNumber !== 9
+            ? item.text.slice(39).trim()
+            : item.text}{" "}
+          ({item.numberInSurah})
+        </AyahText>
+      </AyahContainer>
     </TouchableOpacity>
   );
 
@@ -71,34 +92,56 @@ export default function SearchModal({
       animationType="slide"
       onRequestClose={() => setModalVisible(false)}
     >
-      <View style={styles.modalContainer}>
-        <View style={styles.searchInputContainer}>
-          <TextInput
-            style={styles.searchInput}
-            onChangeText={setSearch}
-            value={search}
-            placeholder="بحث..."
-            placeholderTextColor="#555"
+      {/* Wrap everything in TouchableWithoutFeedback to remove the keyboard when tapping anywhere */}
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <ModalContainer
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={styles.modalContainer}
+        >
+          <View style={styles.searchInputContainer}>
+            <TextInput
+              ref={searchInputRef}
+              style={styles.searchInput}
+              onChangeText={setSearch}
+              value={search}
+              placeholder="بحث..."
+              placeholderTextColor="#555"
+            />
+          </View>
+          <FlatList
+            data={filteredAyat}
+            keyExtractor={(item, index) => `ayah_${index}`}
+            renderItem={renderItem}
+            keyboardShouldPersistTaps="handled" // This ensures taps go through even when the keyboard is open
           />
-        </View>
-        <FlatList
-          data={filteredAyat}
-          keyExtractor={(item, index) => `ayah_${index}`}
-          renderItem={renderItem}
-        />
-      </View>
+        </ModalContainer>
+      </TouchableWithoutFeedback>
     </Modal>
   );
 }
 
+const ModalContainer = styled.KeyboardAvoidingView`
+  background-color: ${(props) => props.theme.third};
+`;
+
+const AyahContainer = styled.View`
+  background-color: ${(props) => props.theme.third};
+`;
+
+const SurahName = styled.Text`
+  color: ${(props) => props.theme.secondary};
+`;
+
+const AyahText = styled.Text`
+  color: ${(props) => props.theme.text};
+`;
+
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
-    backgroundColor: "#fff",
   },
   ayahContainer: {
     gap: 8,
-    backgroundColor: themes.light.third,
     borderBottomWidth: 0.5,
     borderBottomColor: "#777",
     padding: 5,
@@ -106,7 +149,6 @@ const styles = StyleSheet.create({
   surahName: {
     fontSize: 20,
     fontWeight: "bold",
-    color: themes.light.secondary,
     textAlign: "right",
   },
   ayahText: {
@@ -114,9 +156,9 @@ const styles = StyleSheet.create({
     textAlign: "right",
   },
   searchInputContainer: {
+    backgroundColor: "#000",
     paddingVertical: 10,
     paddingHorizontal: 20,
-    backgroundColor: themes.light.text,
   },
   searchInput: {
     height: 40,

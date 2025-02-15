@@ -7,15 +7,20 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { themes } from "@/Helper/Colors";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import styled from "styled-components/native";
+
+import { setItemInStorage } from "@/Lib/manageStorage";
+
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faBookmark } from "@fortawesome/free-solid-svg-icons";
+import { faBookmark as faBookmarkOutline } from "@fortawesome/free-regular-svg-icons";
 
 export default function BookmarkModal({
   bookmark,
   setBookmark,
   page,
   flatlistRef,
+  deviceLanguage,
 }) {
   const [isModalVisible, setModalVisible] = useState(false);
   const bookmarkActions = [
@@ -25,33 +30,34 @@ export default function BookmarkModal({
 
   const handleAddBookmark = async (page) => {
     setBookmark(page);
-
-    const jsonValue = JSON.stringify(page);
-    try {
-      await AsyncStorage.setItem("@bookmark", jsonValue);
-
-      setModalVisible(false);
-    } catch (e) {
-      console.log("Error scrolling to index:", e);
-    }
+    setItemInStorage("@bookmark", page);
+    setModalVisible(false);
   };
 
   const handleGoToPage = async () => {
     flatlistRef.current.scrollToIndex({
       index: bookmark - 1,
-      // animated: true,
+      animated: true,
     });
   };
 
   return (
     <>
       <TouchableOpacity onPress={() => setModalVisible(true)}>
-        <Ionicons
-          name={bookmark === page ? "bookmark" : "bookmark-outline"}
-          size={25}
-          color="white"
-          style={styles.selectBox}
-        />
+        <View
+          style={[
+            styles.selectBox,
+            deviceLanguage.includes("ar")
+              ? styles.borderStart
+              : styles.borderEnd,
+          ]}
+        >
+          <FontAwesomeIcon
+            icon={bookmark === page ? faBookmark : faBookmarkOutline}
+            size={25}
+            color="#fff"
+          />
+        </View>
       </TouchableOpacity>
 
       <Modal
@@ -68,7 +74,7 @@ export default function BookmarkModal({
             style={styles.modalOverlay}
             onPress={() => setModalVisible(false)}
           >
-            <View style={styles.pickerContainer}>
+            <PickerContainer style={styles.pickerContainer}>
               {bookmarkActions.map((bookmark, index) => (
                 <Text
                   key={`bookmarkAction_${index}`}
@@ -85,7 +91,7 @@ export default function BookmarkModal({
                   {bookmark.value}
                 </Text>
               ))}
-            </View>
+            </PickerContainer>
           </View>
         </TouchableWithoutFeedback>
       </Modal>
@@ -93,13 +99,15 @@ export default function BookmarkModal({
   );
 }
 
+const PickerContainer = styled.View`
+  background-color: ${(props) => props.theme.pickerColor};
+`;
+
 const styles = StyleSheet.create({
   selectBox: {
     flex: 1,
     justifyContent: "center",
     padding: 12,
-    borderRightWidth: 1,
-    borderRightColor: "#aaa",
   },
   modalOverlay: {
     flex: 1,
@@ -109,7 +117,6 @@ const styles = StyleSheet.create({
   },
   pickerContainer: {
     width: "80%",
-    backgroundColor: themes.light.main,
     borderRadius: 10,
   },
   pickerItem: {
@@ -120,5 +127,13 @@ const styles = StyleSheet.create({
   borderBottom: {
     borderBottomWidth: 0.5,
     borderBottomColor: "#fff",
+  },
+  borderEnd: {
+    borderRightWidth: 1,
+    borderRightColor: "#aaa",
+  },
+  borderStart: {
+    borderLeftWidth: 1,
+    borderLeftColor: "#aaa",
   },
 });

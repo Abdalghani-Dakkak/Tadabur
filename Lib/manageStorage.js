@@ -1,27 +1,27 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const getItemFromStorage = async (key, flatlistRef, setState) => {
-  let ret = null;
   try {
     const jsonValue = await AsyncStorage.getItem(key);
     const value = JSON.parse(jsonValue);
-    switch (key) {
-      case "@page": {
-        if (value)
+    if (value)
+      switch (key) {
+        case "@page": {
           flatlistRef.current.scrollToIndex({
             index: value - 1,
           });
-        break;
+          break;
+        }
+        case "@recitation":
+        case "@bookmark": 
+        case "@isDark": {
+          setState(value);
+          break;
+        }
       }
-      case "@recitation" || "@bookmark": {
-        // if (value) setState(value);
-        ret = value;
-      }
-    }
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
-  if (ret) return JSON.parse(ret);
 };
 
 const setItemInStorage = async (key, value) => {
@@ -29,7 +29,7 @@ const setItemInStorage = async (key, value) => {
   try {
     await AsyncStorage.setItem(key, jsonValue);
   } catch (e) {
-    console.log("Error scrolling to index:", e);
+    console.error("Error scrolling to index:", e);
   }
 };
 

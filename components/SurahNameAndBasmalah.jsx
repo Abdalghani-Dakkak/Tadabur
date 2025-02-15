@@ -1,60 +1,82 @@
-import { View, Text, ImageBackground, StyleSheet } from "react-native";
-import { themes } from "@/Helper/Colors";
+import { View, ImageBackground, StyleSheet } from "react-native";
+import styled from "styled-components/native";
+
+import { getFontSize } from "@/Lib/font";
 
 import suraFrame from "@/assets/images/surah-frame.png";
+import darkSuraFrame from "@/assets/images/surah-frame-dark-theme.png";
 
-export default function SurahNameAndBasmalah({ ayah }) {
-  if (ayah.numberInSurah === 1)
-    return (
-      <>
-        {/* Surah Name */}
-        <View style={styles.surahNameContainer}>
-          <ImageBackground
-            source={suraFrame}
-            resizeMode="stretch"
-            style={styles.surahNameBackground}
-          >
-            <Text style={styles.surahName}>
-              {ayah.surahName.slice(7).trim()}
-            </Text>
-          </ImageBackground>
-        </View>
+export default function SurahNameAndBasmalah({ item, isDark }) {
+  return (
+    <View style={styles.container}>
+      {/* Surah Name */}
+      <View style={styles.surahNameContainer}>
+        <ImageBackground
+          source={isDark ? darkSuraFrame : suraFrame}
+          resizeMode="stretch"
+          style={styles.surahNameBackground}
+        >
+          <SurahName style={[styles.surahName, { fontSize: getFontSize(20) }]}>
+            {item.surahName.slice(7).trim()}
+          </SurahName>
+        </ImageBackground>
+      </View>
 
-        {/* Basmalah */}
-        <View style={styles.basmalahContainer}>
-          <Text style={styles.basmalah}>{ayah.text.slice(0, 38).trim()}</Text>
+      {/* Basmalah */}
+      {item.surahNumber !== 1 && item.surahNumber !== 9 && (
+        <View
+          style={[
+            styles.basmalahContainer,
+            item.surahNumber === 1 && { fontWeight: 600 },
+          ]}
+        >
+          <Basmalah style={[styles.basmalah, { fontSize: getFontSize(18) }]}>
+            {item.ayahs[0].text.slice(0, 38).trim()}
+          </Basmalah>
         </View>
-      </>
-    );
+      )}
+    </View>
+  );
 }
 
+const SurahName = styled.Text`
+  color: ${(props) => props.theme.secondary};
+`;
+
+const Basmalah = styled.Text`
+  color: ${(props) => props.theme.basmalah};
+`;
+
 const styles = StyleSheet.create({
+  container: {
+    width: "100%",
+    gap: 5,
+    paddingVertical: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   surahNameContainer: {
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 10,
   },
   surahNameBackground: {
     width: "100%",
-    paddingVertical: 10,
   },
   surahName: {
-    fontSize: 20,
+    fontSize: getFontSize(20),
     fontWeight: "bold",
     textAlign: "center",
-    color: themes.light.secondary,
+    paddingVertical: 10,
   },
   basmalahContainer: {
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
-    marginVertical: 15,
   },
   basmalah: {
-    fontSize: 18,
+    fontSize: getFontSize(18),
     fontWeight: "bold",
     textAlign: "center",
-    color: themes.light.text,
   },
 });
