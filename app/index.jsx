@@ -1,11 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
   FlatList,
   Dimensions,
-  ImageBackground,
   TouchableWithoutFeedback,
   TouchableOpacity,
   Animated,
@@ -61,6 +60,7 @@ import {
   getFontSize,
   getScreenSizeCategory,
 } from "@/Lib/font";
+import { numberToArabicIndic } from "@/Lib/numberToArabicIndic";
 
 import QuranUthmani from "@/api/quran-uthmani.json";
 import Recitations from "@/api/recitations.json";
@@ -123,7 +123,7 @@ export default function Index() {
   }, [currentSound]);
 
   const [fontsLoaded] = useFonts({
-    KitabRegular: require("../assets/fonts/KitabRegular.ttf"),
+    kfgqpchafsuthmanicscript_regula: require("../assets/fonts/kfgqpchafsuthmanicscript_regula.otf"),
   });
 
   I18nManager.forceRTL(false); // Forces Left-to-Right layout
@@ -388,7 +388,7 @@ export default function Index() {
 
   const renderPage = ({ item: pageNumber }) => {
     return (
-      <Backgorund source={isDark ? darkFrame : frame} resizeMode="stretch">
+      <Background source={isDark ? darkFrame : frame} resizeMode="stretch">
         {+pageNumber === bookmark && (
           <Image source={bookmarkImage} style={styles.bookmark} />
         )}
@@ -412,163 +412,67 @@ export default function Index() {
                     style={[styles.page]}
                     contentContainerStyle={{ flexGrow: 1 }}
                   >
-                    {pages[pageNumber].map((item) => (
-                      <View>
-                        {item.ayahs[0].numberInSurah === 1 && (
-                          <SurahNameAndBasmalah item={item} isDark={isDark} />
-                        )}
+                    {pages[pageNumber].map(
+                      (item) =>
+                        +pageNumber === +currentPage && (
+                          <View>
+                            {item.ayahs[0].numberInSurah === 1 && (
+                              <SurahNameAndBasmalah
+                                item={item}
+                                isDark={isDark}
+                              />
+                            )}
 
-                        <Text style={{ textAlign: "justify" }}>
-                          {item.ayahs.map((ayah, index) => (
-                            <AyahText
-                              style={[
-                                styles.ayahText,
-                                {
-                                  fontFamily: fontsLoaded ? "KitabRegular" : "",
-                                },
-                                { fontSize: getFontSize(20) },
-                                ayah.number === selectedAyah?.number && {
-                                  backgroundColor: isDark
-                                    ? "#cccccc55"
-                                    : "#03a9f422",
-                                },
-                              ]}
-                              onPress={() => setOptions((prev) => !prev)}
-                              onLongPress={() => setSelectedAyah(ayah)}
+                            <Text
+                              style={{
+                                textAlign: "justify",
+                              }}
                             >
-                              {`${
-                                ayah.numberInSurah !== 1 && index !== 0
-                                  ? " "
-                                  : ""
-                              }${
-                                ayah.numberInSurah === 1 &&
-                                item.surahNumber !== 1 &&
-                                item.surahNumber !== 9
-                                  ? ayah.text.slice(39).trim()
-                                  : ayah.text
-                              } `}
-
-                              <AyahNumber
-                                style={[
-                                  styles.ayahNumber,
-                                  { fontSize: getFontSize(18) },
-                                ]}
-                              >{`{${ayah.numberInSurah}}`}</AyahNumber>
-                            </AyahText>
-                          ))}
-                        </Text>
-                      </View>
-                    ))}
+                              {item.ayahs.map((ayah, index) => (
+                                <AyahText
+                                  style={[
+                                    styles.ayahText,
+                                    {
+                                      fontSize: getFontSize(20),
+                                      fontFamily: fontsLoaded
+                                        ? "kfgqpchafsuthmanicscript_regula"
+                                        : "",
+                                    },
+                                    ayah.number === selectedAyah?.number && {
+                                      backgroundColor: isDark
+                                        ? "#cccccc55"
+                                        : "#03a9f422",
+                                    },
+                                  ]}
+                                  onPress={() => setOptions((prev) => !prev)}
+                                  onLongPress={() => setSelectedAyah(ayah)}
+                                >
+                                  {`${
+                                    ayah.numberInSurah !== 1 && index !== 0
+                                      ? " "
+                                      : ""
+                                  }${
+                                    ayah.numberInSurah === 1 &&
+                                    item.surahNumber !== 1 &&
+                                    item.surahNumber !== 9
+                                      ? ayah.text.slice(39).trim()
+                                      : ayah.text
+                                  } ${numberToArabicIndic(ayah.numberInSurah)}`}
+                                </AyahText>
+                              ))}
+                            </Text>
+                          </View>
+                        )
+                    )}
                   </ScrollView>
                 </View>
               </PinchGestureHandler>
             </GestureHandlerRootView>
           </View>
         </TouchableWithoutFeedback>
-      </Backgorund>
+      </Background>
     );
   };
-  // const renderPageMemo = React.memo(renderPage);
-
-  const PageItem = React.memo(
-    ({
-      pageNumber,
-      isDark,
-      fontsLoaded,
-      selectedAyah,
-      setOptions,
-      setSelectedAyah,
-    }) => {
-      return (
-        <Backgorund source={isDark ? darkFrame : frame} resizeMode="stretch">
-          {+pageNumber === bookmark && (
-            <Image source={bookmarkImage} style={styles.bookmark} />
-          )}
-          <TouchableWithoutFeedback
-            onPress={() => setOptions((prev) => !prev)}
-            accessible={false}
-          >
-            <View style={{ flex: 1 }}>
-              <GestureHandlerRootView style={{ flex: 1 }}>
-                <PinchGestureHandler
-                  onGestureEvent={handlePinchGesture}
-                  onHandlerStateChange={handlePinchStateChange}
-                  minPointers={2}
-                  maxPointers={2}
-                  simultaneousHandlers={flatlistRef}
-                >
-                  <View style={{ flex: 1 }}>
-                    <ScrollView
-                      style={[styles.page]}
-                      contentContainerStyle={{ flexGrow: 1 }}
-                    >
-                      {pages[pageNumber].map((item) => (
-                        <View key={item.surahNumber}>
-                          {item.ayahs[0].numberInSurah === 1 && (
-                            <SurahNameAndBasmalah item={item} isDark={isDark} />
-                          )}
-                          <Text style={{ textAlign: "justify" }}>
-                            {item.ayahs.map((ayah, index) => (
-                              <AyahText
-                                key={ayah.number}
-                                style={[
-                                  styles.ayahText,
-                                  {
-                                    fontFamily: fontsLoaded
-                                      ? "KitabRegular"
-                                      : "",
-                                  },
-                                  { fontSize: getFontSize(20) },
-                                  ayah.number === selectedAyah?.number && {
-                                    backgroundColor: isDark
-                                      ? "#cccccc55"
-                                      : "#03a9f422",
-                                  },
-                                ]}
-                                onPress={() => setOptions((prev) => !prev)}
-                                onLongPress={() => setSelectedAyah(ayah)}
-                              >
-                                {`${
-                                  ayah.numberInSurah !== 1 && index !== 0
-                                    ? " "
-                                    : ""
-                                }${
-                                  ayah.numberInSurah === 1 &&
-                                  item.surahNumber !== 1 &&
-                                  item.surahNumber !== 9
-                                    ? ayah.text.slice(39).trim()
-                                    : ayah.text
-                                } `}
-                                <AyahNumber
-                                  style={[
-                                    styles.ayahNumber,
-                                    { fontSize: getFontSize(18) },
-                                  ]}
-                                >{`{${ayah.numberInSurah}}`}</AyahNumber>
-                              </AyahText>
-                            ))}
-                          </Text>
-                        </View>
-                      ))}
-                    </ScrollView>
-                  </View>
-                </PinchGestureHandler>
-              </GestureHandlerRootView>
-            </View>
-          </TouchableWithoutFeedback>
-        </Backgorund>
-      );
-    },
-    (prevProps, nextProps) => {
-      // Custom comparison function to prevent unnecessary re-renders
-      return (
-        prevProps.pageNumber === nextProps.pageNumber &&
-        prevProps.isDark === nextProps.isDark &&
-        prevProps.fontsLoaded === nextProps.fontsLoaded &&
-        prevProps.selectedAyah?.number === nextProps.selectedAyah?.number
-      );
-    }
-  );
 
   return (
     <SafeAreaProvider>
@@ -596,10 +500,6 @@ export default function Index() {
                 offset: width * index,
                 index,
               })}
-              windowSize={3} // Render only 3 pages (current + 1 adjacent each side)
-              maxToRenderPerBatch={2} // Render 2 pages per batch
-              initialNumToRender={2} // Initial render count
-              removeClippedSubviews={true} // Unmount off-screen components
             />
           </PanGestureHandler>
         </GestureHandlerRootView>
@@ -826,17 +726,13 @@ export default function Index() {
   );
 }
 
-const Backgorund = styled.ImageBackground`
+const Background = styled.ImageBackground`
   background-color: ${(props) => props.theme.background};
   padding-block: ${height / 15}px;
 `;
 
 const AyahText = styled.Text`
   color: ${(props) => props.theme.text};
-`;
-
-const AyahNumber = styled.Text`
-  color: ${(props) => props.theme.main};
 `;
 
 const styles = StyleSheet.create({
@@ -859,9 +755,7 @@ const styles = StyleSheet.create({
   },
   ayahText: {
     textAlign: "right",
-    writingDirection: "rtl", // Ensures proper alignment for Arabic text
-    letterSpacing: 1,
-    textBreakStrategy: "balanced",
+    writingDirection: "rtl",
   },
   ayahNumber: {
     fontWeight: "bold",

@@ -5,12 +5,7 @@ export function removeDiacritics(text) {
 }
 
 function removeStopSigns(text) {
-  return text
-    .replace(/ ۖ/g, "") // Normalize ۖ  to null
-    .replace(/ ۗ/g, "") // Normalize ۗ  to null
-    .replace(/ ۚ/g, "") // Normalize ۚ  to null
-    .replace(/ ۘ/g, "") // Normalize ۘ  to null
-    .replace(/ ۙ/g, ""); // Normalize ۙ  to null
+  return text.replace(/ ۖ| ۗ| ۚ| ۘ| ۙ| ۛ/g, ""); // Normalize stop signs to null
 }
 
 function normalizeArabic(text) {

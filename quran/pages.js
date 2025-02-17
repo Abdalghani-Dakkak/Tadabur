@@ -1,4 +1,4 @@
-import { removeExcessMem } from "@/Lib/removeExcessMem";
+import { textOptimization } from "@/Lib/textOptimization";
 import QuranUthmani from "../api/quran-uthmani.json";
 
 const quran = QuranUthmani.data.surahs;
@@ -27,7 +27,7 @@ quran?.forEach((surah) => {
     // Add the ayah to the corresponding surah group
     surahGroup.ayahs.push({
       ...ayah,
-      text: removeExcessMem(ayah.text),
+      text: textOptimization(ayah.text),
       surahNumber: surah.number,
     });
   });
