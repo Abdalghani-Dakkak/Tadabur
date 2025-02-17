@@ -1,9 +1,6 @@
-import * as Localization from "expo-localization";
-
-const deviceLanguage = Localization.locale;
+import { I18nManager } from "react-native";
 
 export function numberToArabicIndic(number) {
-  // Mapping of digits to their Arabic-Indic equivalents
   const arabicIndicDigits = {
     0: "\u0660",
     1: "\u0661",
@@ -17,14 +14,17 @@ export function numberToArabicIndic(number) {
     9: "\u0669",
   };
 
-  // Convert the number to a string and replace each digit
+
   const numberStr = number.toString();
   const arabicIndicNumber = numberStr
     .split("")
-    .map((digit) => arabicIndicDigits[digit] || digit) // Fallback to original digit if not found
+    .map((digit) => arabicIndicDigits[digit] || digit)
     .join("");
 
-  return deviceLanguage.includes("ar")
+  let result = I18nManager.isRTL
     ? arabicIndicNumber
     : arabicIndicNumber.split("").reverse().join("");
+
+  // Only reverse if the layout is NOT RTL
+  return result.split("").reverse().join("");
 }

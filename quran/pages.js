@@ -1,7 +1,6 @@
-import { textOptimization } from "@/Lib/textOptimization";
-import QuranUthmani from "../api/quran-uthmani.json";
+import hafsData from "@/api/hafsData.json";
 
-const quran = QuranUthmani.data.surahs;
+const quran = hafsData.data.surahs;
 
 const pages = {};
 quran?.forEach((surah) => {
@@ -27,7 +26,7 @@ quran?.forEach((surah) => {
     // Add the ayah to the corresponding surah group
     surahGroup.ayahs.push({
       ...ayah,
-      text: textOptimization(ayah.text),
+      text: ayah.text.slice(0, -1),
       surahNumber: surah.number,
     });
   });

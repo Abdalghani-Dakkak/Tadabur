@@ -1,6 +1,6 @@
-import QuranUthmani from "../api/quran-uthmani.json";
+import hafsData from "@/api/hafsData.json";
 
-const quran = QuranUthmani.data.surahs;
+const quran = hafsData.data.surahs;
 
 const juzGroups = [];
 

@@ -7,6 +7,8 @@ import suraFrame from "@/assets/images/surah-frame.png";
 import darkSuraFrame from "@/assets/images/surah-frame-dark-theme.png";
 
 export default function SurahNameAndBasmalah({ item, isDark }) {
+  const basmalah = "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ";
+
   return (
     <View style={styles.container}>
       {/* Surah Name */}
@@ -17,7 +19,7 @@ export default function SurahNameAndBasmalah({ item, isDark }) {
           style={styles.surahNameBackground}
         >
           <SurahName style={[styles.surahName, { fontSize: getFontSize(20) }]}>
-            {item.surahName.slice(7).trim()}
+            {item.surahName}
           </SurahName>
         </ImageBackground>
       </View>
@@ -31,7 +33,7 @@ export default function SurahNameAndBasmalah({ item, isDark }) {
           ]}
         >
           <Basmalah style={[styles.basmalah, { fontSize: getFontSize(18) }]}>
-            {item.ayahs[0].text.slice(0, 38).trim()}
+            {basmalah}
           </Basmalah>
         </View>
       )}

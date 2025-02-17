@@ -62,7 +62,7 @@ import {
 } from "@/Lib/font";
 import { numberToArabicIndic } from "@/Lib/numberToArabicIndic";
 
-import QuranUthmani from "@/api/quran-uthmani.json";
+import hafsData from "@/api/hafsData.json";
 import Recitations from "@/api/recitations.json";
 
 import frame from "@/assets/images/islamic-frame.png";
@@ -97,8 +97,7 @@ export default function Index() {
   const [soundLoader, setSoundLoader] = useState(false);
   const [playNext, setPlayNext] = useState(0);
 
-  // Add these state variables near other useState hooks
-  const [zoomLevel, setZoomLevel] = useState(1.0);
+  // Add these state variables near other useState hooksu
   const [baseScale, setBaseScale] = useState(1.0);
   const [currentScale, setCurrentScale] = useState(1.0);
   const [showZoomLevel, setShowZoomLevel] = useState(false);
@@ -126,10 +125,17 @@ export default function Index() {
     kfgqpchafsuthmanicscript_regula: require("../assets/fonts/kfgqpchafsuthmanicscript_regula.otf"),
   });
 
-  I18nManager.forceRTL(false); // Forces Left-to-Right layout
-  I18nManager.allowRTL(false); // Prevents switching to Right-to-Left
+  const deviceLanguage = Localization.locale;
 
-  const deviceLanguage = Localization.locale; // Example: "ar", "en-US"
+  // useEffect(() => {
+  //   if (Localization.locale.includes("ar")) {
+  //     I18nManager.forceRTL(true);
+  //     I18nManager.allowRTL(true);
+  //   } else {
+  //     I18nManager.forceRTL(false);
+  //     I18nManager.allowRTL(false);
+  //   }
+  // }, []);
 
   useEffect(() => {
     getItemFromStorage("@page", flatlistRef);
@@ -351,36 +357,39 @@ export default function Index() {
       const isZoomingIn = currentScale > baseScale;
 
       // Adjust the zoom level by 0.2
-      let newZoomLevel = zoomLevel;
+      let newZoomLevel = zoomRef.current;
       if (isZoomingIn) {
         // Increase by 0.2, capped at 2.0
-        if (zoomLevel >= 1) newZoomLevel = Math.min(2.0, zoomLevel + 0.2);
-        else newZoomLevel = Math.min(2.0, zoomLevel + 0.1); // Increase by 0.1, capped at 2.0
+        if (zoomRef.current >= 1)
+          newZoomLevel = Math.min(2.0, zoomRef.current + 0.2);
+        else newZoomLevel = Math.min(2.0, zoomRef.current + 0.1); // Increase by 0.1, capped at 2.0
       } else {
         // Decrease by 0.2, capped at 0.7
-        if (zoomLevel > 1) newZoomLevel = Math.max(0.7, zoomLevel - 0.2);
-        else newZoomLevel = Math.max(0.7, zoomLevel - 0.1); // Decrease by 0.1, capped at 0.7
+        if (zoomRef.current > 1)
+          newZoomLevel = Math.max(0.7, zoomRef.current - 0.2);
+        else newZoomLevel = Math.max(0.7, zoomRef.current - 0.1); // Decrease by 0.1, capped at 0.7
       }
 
       // Round to 1 decimal place
       newZoomLevel = Math.round(newZoomLevel * 10) / 10;
 
       // Update the zoom level and reset scale values
-      setZoomLevel(newZoomLevel);
+      // setZoomLevel(newZoomLevel);
+      zoomRef.current = newZoomLevel;
       setBaseScale(1.0);
       setCurrentScale(1.0);
 
       adjustFontConfig(
         getDeviceType(),
         getScreenSizeCategory(),
-        0.95 * zoomLevel,
-        1.15 * zoomLevel
+        0.95 * zoomRef.current,
+        1.15 * zoomRef.current
       );
 
       setShowZoomLevel(true);
 
       // Hide the zoom level indicator after 1 second
-      setTimeout(() => {
+      const time = setTimeout(() => {
         setShowZoomLevel(false);
       }, 1000);
     }
@@ -413,9 +422,9 @@ export default function Index() {
                     contentContainerStyle={{ flexGrow: 1 }}
                   >
                     {pages[pageNumber].map(
-                      (item) =>
+                      (item, index) =>
                         +pageNumber === +currentPage && (
-                          <View>
+                          <View key={`page_${index}`}>
                             {item.ayahs[0].numberInSurah === 1 && (
                               <SurahNameAndBasmalah
                                 item={item}
@@ -428,38 +437,38 @@ export default function Index() {
                                 textAlign: "justify",
                               }}
                             >
-                              {item.ayahs.map((ayah, index) => (
-                                <AyahText
-                                  style={[
-                                    styles.ayahText,
-                                    {
-                                      fontSize: getFontSize(20),
-                                      fontFamily: fontsLoaded
-                                        ? "kfgqpchafsuthmanicscript_regula"
-                                        : "",
-                                    },
-                                    ayah.number === selectedAyah?.number && {
-                                      backgroundColor: isDark
-                                        ? "#cccccc55"
-                                        : "#03a9f422",
-                                    },
-                                  ]}
-                                  onPress={() => setOptions((prev) => !prev)}
-                                  onLongPress={() => setSelectedAyah(ayah)}
-                                >
-                                  {`${
-                                    ayah.numberInSurah !== 1 && index !== 0
-                                      ? " "
-                                      : ""
-                                  }${
-                                    ayah.numberInSurah === 1 &&
-                                    item.surahNumber !== 1 &&
-                                    item.surahNumber !== 9
-                                      ? ayah.text.slice(39).trim()
-                                      : ayah.text
-                                  } ${numberToArabicIndic(ayah.numberInSurah)}`}
-                                </AyahText>
-                              ))}
+                              {item.ayahs.map((ayah, index) => {
+                                const verseNumber = `\u202E${numberToArabicIndic(
+                                  ayah.numberInSurah
+                                )}\u202C`;
+                                return (
+                                  <AyahText
+                                    key={`verse_${index + 1}`}
+                                    style={[
+                                      styles.ayahText,
+                                      {
+                                        fontSize: getFontSize(20),
+                                        fontFamily: fontsLoaded
+                                          ? "kfgqpchafsuthmanicscript_regula"
+                                          : "",
+                                      },
+                                      ayah.number === selectedAyah?.number && {
+                                        backgroundColor: isDark
+                                          ? "#cccccc55"
+                                          : "#03a9f422",
+                                      },
+                                    ]}
+                                    onPress={() => setOptions((prev) => !prev)}
+                                    onLongPress={() => setSelectedAyah(ayah)}
+                                  >
+                                    {`${
+                                      ayah.numberInSurah !== 1 && index !== 0
+                                        ? " "
+                                        : ""
+                                    }${ayah.text} ${verseNumber}`}
+                                  </AyahText>
+                                );
+                              })}
                             </Text>
                           </View>
                         )
@@ -513,7 +522,7 @@ export default function Index() {
                 <Text style={styles.textDetails}>
                   {removeDiacritics(
                     pages[currentPage][pages[currentPage]?.length - 1].surahName
-                  ).replace(/ٱ/g, "ا")}
+                  )}
                 </Text>
                 <Text style={styles.textDetails}>{currentPage}</Text>
                 <Text style={styles.textDetails}>
@@ -701,7 +710,7 @@ export default function Index() {
                   <Text style={styles.optionText}>الفهرس</Text>
                 </TouchableOpacity>
                 <NavigationModal
-                  data={{ data: QuranUthmani.data.surahs }}
+                  data={{ data: hafsData.data.surahs }}
                   isModalVisible={isSurahModalOpen}
                   setModalVisible={setIsSurahModalOpen}
                   flatlistRef={flatlistRef}
@@ -717,7 +726,7 @@ export default function Index() {
             edges={["top", "bottom", "left", "right"]}
           >
             <View style={styles.zoomLevel}>
-              <Text style={styles.zoomLevelText}>x{zoomLevel}</Text>
+              <Text style={styles.zoomLevelText}>x{zoomRef.current}</Text>
             </View>
           </SafeAreaView>
         )}
@@ -728,7 +737,7 @@ export default function Index() {
 
 const Background = styled.ImageBackground`
   background-color: ${(props) => props.theme.background};
-  padding-block: ${height / 15}px;
+  padding-block: ${height / 15 < 45 ? 45 : height / 15}px;
 `;
 
 const AyahText = styled.Text`
@@ -743,7 +752,7 @@ const styles = StyleSheet.create({
   page: {
     width: width,
     height: height - 80,
-    paddingHorizontal: "10%",
+    paddingHorizontal: width / 10 < 40 ? 40 : width / 10,
     flex: 1,
   },
   bookmark: {
